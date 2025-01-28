@@ -1,6 +1,7 @@
 from __future__ import annotations
 from board import Board
 from collections.abc import Callable
+import heapq
 
 
 '''
@@ -36,4 +37,21 @@ def NA(board: Board) -> int:
 A* Search 
 '''
 def a_star_search(board: Board, heuristic: Callable[[Board], int]):
-    return
+    h = 0   # initialize heuristic
+    if heuristic is not None: # set h to heuristic value if not None
+        h = heuristic(board)
+
+    pq = [(h, 0, board, [])] # (f:(dist total: h + g), g:(dist from start), board, path)
+
+    curr = board
+    path = None
+    while curr.state != board.solution: # Also set max limit on time or nodes searched
+        f, g, curr, path = heapq.heappop(pq)
+        g + 1
+
+        for b, move in curr.next_action_states():
+            if heuristic is not None: # set h to heuristic value if not None
+                h = heuristic(b)
+            heapq.heappush(pq, (g + h, g, b, path + move))
+
+    return path
