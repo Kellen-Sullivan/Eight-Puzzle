@@ -7,6 +7,8 @@ import copy
 # Dict of possible movement directions
 moveset = {"right": (0, -1), "left": (0, 1), "up": (1, 0), "down": (-1, 0)}
 
+# state: 3x3 2d numpy array
+
 class Board:
     def __init__(self, m: int, seed = None):
         self.open_space = (2, 2)
