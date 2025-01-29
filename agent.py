@@ -13,9 +13,7 @@ def MT(board: Board) -> int:
     misplaced_tiles = 0
     for i in range(3):
         for j in range(3):
-            if board.state[i,j] == 0: # don't add a misplaced tile if its the empty tile
-                continue
-            if board.state[i,j] != (i*3) + j + 1:
+            if board.state[i,j] != 0 and board.state[i,j] != (i*3) + j + 1:
                 misplaced_tiles+=1
     return misplaced_tiles
 
@@ -51,11 +49,10 @@ def a_star_search(board: Board, heuristic: Callable[[Board], int]):
     path = None
     while not curr.goal_test(): # Also set max limit on time or nodes searched
         f, g, _, curr, path = heapq.heappop(pq)
-        g + 1
 
         for b, move in curr.next_action_states():
             if heuristic is not None: # set h to heuristic value if not None
                 h = heuristic(b)
-            heapq.heappush(pq, (g + h, g, next(counter), b, path + " " + move + " "))
+            heapq.heappush(pq, (g+1 + h, g+1, next(counter), b, path + " " + move + " "))
 
     return path.split()
