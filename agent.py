@@ -2,6 +2,7 @@ from __future__ import annotations
 from board import Board
 from collections.abc import Callable
 import heapq
+import itertools
 
 
 '''
@@ -12,6 +13,8 @@ def MT(board: Board) -> int:
     misplaced_tiles = 0
     for i in range(3):
         for j in range(3):
+            if board.state[i,j] == 0: # don't add a misplaced tile if its the empty tile
+                continue
             if board.state[i,j] != (i*3) + j + 1:
                 misplaced_tiles+=1
     return misplaced_tiles
@@ -41,17 +44,18 @@ def a_star_search(board: Board, heuristic: Callable[[Board], int]):
     if heuristic is not None: # set h to heuristic value if not None
         h = heuristic(board)
 
-    pq = [(h, 0, board, [])] # (f:(dist total: h + g), g:(dist from start), board, path)
+    counter = itertools.count() # use this to make sure each value in heapq is unique, so board doesn't compare with board
+    pq = [(h, 0, next(counter), board, "")] # (f:(dist total: h + g), g:(dist from start), board, path)
 
     curr = board
     path = None
-    while curr.state != board.solution: # Also set max limit on time or nodes searched
-        f, g, curr, path = heapq.heappop(pq)
+    while not curr.goal_test(): # Also set max limit on time or nodes searched
+        f, g, _, curr, path = heapq.heappop(pq)
         g + 1
 
         for b, move in curr.next_action_states():
             if heuristic is not None: # set h to heuristic value if not None
                 h = heuristic(b)
-            heapq.heappush(pq, (g + h, g, b, path + move))
+            heapq.heappush(pq, (g + h, g, next(counter), b, path + " " + move + " "))
 
-    return path
+    return path.split()
