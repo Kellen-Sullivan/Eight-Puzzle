@@ -4,6 +4,7 @@ from collections.abc import Callable
 import heapq
 import itertools
 
+MAX_NODES_SEARCHED = 1000
 
 '''
 Heuristics
@@ -48,8 +49,10 @@ def a_star_search(board: Board, heuristic: Callable[[Board], int]):
     curr = board
     path = None
     while not curr.goal_test(): # Also set max limit on time or nodes searched
-        f, g, _, curr, path = heapq.heappop(pq)
-
+        f, g, c, curr, path = heapq.heappop(pq)
+        # stop search if nodes searched is greater than MAX_NODES_SEARCHED
+        if c > MAX_NODES_SEARCHED:
+            return f"Searched {MAX_NODES_SEARCHED} and found no solution"
         for b, move in curr.next_action_states():
             if heuristic is not None: # set h to heuristic value if not None
                 h = heuristic(b)
