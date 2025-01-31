@@ -21,7 +21,6 @@ def main():
             cb_ans = agent.a_star_search(board, agent.CB)
             # na_ans = agent.a_star_search(board, agent.NA)
             
-
             end =  time.process_time()
             solution_cpu_time = end-start
 

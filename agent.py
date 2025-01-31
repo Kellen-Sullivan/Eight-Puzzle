@@ -52,7 +52,8 @@ def a_star_search(board: Board, heuristic: Callable[[Board], int]):
         f, g, c, curr, path = heapq.heappop(pq)
         # stop search if nodes searched is greater than MAX_NODES_SEARCHED
         if c > MAX_NODES_SEARCHED:
-            return f"Searched {MAX_NODES_SEARCHED} and found no solution"
+            print(f"Searched {MAX_NODES_SEARCHED} and found no solution")
+            return -1
         for b, move in curr.next_action_states():
             if heuristic is not None: # set h to heuristic value if not None
                 h = heuristic(b)
