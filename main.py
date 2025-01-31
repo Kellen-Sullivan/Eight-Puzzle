@@ -19,11 +19,12 @@ def main():
             bfs_ans = agent.a_star_search(board, None)
             mt_ans = agent.a_star_search(board, agent.MT) 
             cb_ans = agent.a_star_search(board, agent.CB)
-            # na_ans = agent.a_star_search(board, agent.NA)
+            na_ans = agent.a_star_search(board, agent.NA)
             
 
             end =  time.process_time()
             solution_cpu_time = end-start
+
 
 if __name__ == "__main__":
     main()
