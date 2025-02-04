@@ -122,4 +122,4 @@ def a_star_search(board: Board, heuristic: Callable[[Board], int]):
                 h = heuristic(b)
             heapq.heappush(pq, (g+1 + h, g+1, next(counter), b, path + " " + move + " "))
 
-    return (path.split(), c)
+    return path.split()
