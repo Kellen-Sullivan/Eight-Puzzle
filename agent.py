@@ -4,7 +4,7 @@ from collections.abc import Callable
 import heapq
 import itertools
 
-MAX_NODES_SEARCHED = 1000
+MAX_NODES_SEARCHED = 50000
 
 '''
 Heuristics
@@ -99,18 +99,27 @@ def a_star_search(board: Board, heuristic: Callable[[Board], int]):
 
     counter = itertools.count() # use this to make sure each value in heapq is unique, so board doesn't compare with board
     pq = [(h, 0, next(counter), board, "")] # (f:(dist total: h + g), g:(dist from start), board, path)
+    visited = set() # set to keep track of already visited board states
 
     curr = board
     path = None
     while not curr.goal_test(): # Also set max limit on time or nodes searched
         f, g, c, curr, path = heapq.heappop(pq)
+        # check if curr board is already in 
+        if curr in visited:
+            continue
+        board_state_tuple = curr.state.tobytes() # convert the board state (which is a numpy arr) into bytes, so that it is hashable and can be stored in the visited set
+        visited.add(board_state_tuple)
         # stop search if nodes searched is greater than MAX_NODES_SEARCHED
         if c > MAX_NODES_SEARCHED:
             print(f"Searched {MAX_NODES_SEARCHED} and found no solution")
             return -1
         for b, move in curr.next_action_states():
+            b_state_tuple = b.state.tobytes()
+            if b_state_tuple in visited:
+                continue
             if heuristic is not None: # set h to heuristic value if not None
                 h = heuristic(b)
             heapq.heappush(pq, (g+1 + h, g+1, next(counter), b, path + " " + move + " "))
 
-    return path.split()
+    return (path.split(), c)
