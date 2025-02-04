@@ -108,15 +108,15 @@ def a_star_search(board: Board, heuristic: Callable[[Board], int]):
         # check if curr board is already in 
         if curr in visited:
             continue
-        board_state_tuple = curr.state.tobytes() # convert the board state (which is a numpy arr) into bytes, so that it is hashable and can be stored in the visited set
-        visited.add(board_state_tuple)
+        board_state = curr.state.tobytes() # convert the board state (which is a numpy arr) into bytes, so that it is hashable and can be stored in the visited set
+        visited.add(board_state)
         # stop search if nodes searched is greater than MAX_NODES_SEARCHED
         if c > MAX_NODES_SEARCHED:
             print(f"Searched {MAX_NODES_SEARCHED} and found no solution")
             return -1
         for b, move in curr.next_action_states():
-            b_state_tuple = b.state.tobytes()
-            if b_state_tuple in visited:
+            b_state = b.state.tobytes()
+            if b_state in visited:
                 continue
             if heuristic is not None: # set h to heuristic value if not None
                 h = heuristic(b)
